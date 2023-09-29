@@ -12,18 +12,30 @@ export class InternsService {
   }
 
   findAll() {
-    return this.prisma.intern.findMany();
+    return this.prisma.intern.findMany({
+      include:{
+        InternApplication: {
+          select:{
+            application: {
+              select:{
+                name: true
+              }
+            }
+          }
+        }
+      }
+    });
   }
 
   findOne(id: string) {
     return this.prisma.intern.findUnique({ where: { id } });
   }
 
-  update(id: number, updateInternDto: UpdateInternDto) {
-    return `This action updates a #${id} intern`;
+  update(id: string, updateInternDto: UpdateInternDto) {
+   return this.prisma.intern.update({ where: { id }, data: updateInternDto });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} intern`;
+  remove(id: string) {
+    return this.prisma.intern.delete({ where: { id } });
   }
 }
